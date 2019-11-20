@@ -1,0 +1,67 @@
+#%RAML 1.0
+---
+baseUri: http://localhost:8081/
+title: munit-for-apikit-flow
+
+/apikit-login:
+  displayName: Login
+  get:
+    queryParameters:
+     name:
+       displayName: Get Name
+       type: string
+    description: Login through signed request
+    responses:
+      200:
+        body:
+          application/json:
+           example: |
+              {
+                "message": "Hello Manish" 
+              } 
+/apikit-post: 
+  displayName: Post 
+  description: Post Request             
+  post:
+    body:
+     application/json:  
+    responses:
+      201:
+        body:
+          application/json:
+           example: |
+              {
+                "message": "Success POST" 
+              }
+          
+/apikit-put: 
+  displayName: Put
+  description: Put Request          
+  put:
+    body:
+     application/json:    
+    responses:
+      201:
+        body:
+          application/json:
+           example: |
+              {
+                "message": "Success PUT" 
+              }
+          
+/apikit-delete:  
+  displayName: Delete
+  description: Delete id Request         
+  delete:
+    queryParameters:
+     Id:
+       displayName: Delete id
+       type: integer    
+    responses:
+      200:
+        body:
+          application/json:
+           example: |
+              {
+                "message": "Success DELETE" 
+              }

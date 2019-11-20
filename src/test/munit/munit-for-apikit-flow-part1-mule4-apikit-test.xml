@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd http://www.mulesoft.org/schema/mule/munit-tools http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd ">
+    <munit:config name="munit-for-apikit-flow-part1-mule4-apikit-test.xml" />
+    <http:request-config name="HTTP_Request_Configuration" basePath="/api">
+        <http:request-connection host="localhost" port="8081" />
+    </http:request-config>
+    <munit:test name="put:\apikit-put:munit-for-apikit-flow-part1-mule4-config-201-application\json-FlowTest" description="Verifying functionality of [put:\apikit-put:munit-for-apikit-flow-part1-mule4-config-201-application\json]">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="munit-for-apikit-flow-part1-mule4-main" />
+            <munit:enable-flow-source value="put:\apikit-put:munit-for-apikit-flow-part1-mule4-config" />
+        </munit:enable-flow-sources>
+        <munit:behavior>
+            <set-payload value="#[MunitTools::getResourceAsString('scaffolder/request/put_apikit-put_application_json.json')]" />
+        </munit:behavior>
+        <munit:execution>
+            <http:request config-ref="HTTP_Request_Configuration" method="PUT" path="/apikit-put" doc:name="apikit-put">
+                <http:headers><![CDATA[#[{"Accept":"application/json","Content-Type":"application/json"}]]]></http:headers>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(201)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 201" />
+            <munit-tools:assert-that expression="#[%dw 2.0 output application/json ---payload]" is='#[MunitTools::equalTo(readUrl("classpath://scaffolder/response/put_201_apikit-put_application_json.json", "application/json"))]' message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" doc:id="bb6653e2-3022-4644-9099-204d13a5fce6"/>
+        </munit:validation>
+    </munit:test>
+    <munit:test name="delete:\apikit-delete:munit-for-apikit-flow-part1-mule4-config-200-application\json-FlowTest" description="Verifying functionality of [delete:\apikit-delete:munit-for-apikit-flow-part1-mule4-config-200-application\json]">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="munit-for-apikit-flow-part1-mule4-main" />
+            <munit:enable-flow-source value="delete:\apikit-delete:munit-for-apikit-flow-part1-mule4-config" />
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <http:request config-ref="HTTP_Request_Configuration" method="DELETE" path="/apikit-delete" doc:name="apikit-delete">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[{"Id":"123"}]]]></http:query-params>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(200)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 200" />
+            <munit-tools:assert-that expression="#[%dw 2.0 output application/json ---payload]" is='#[MunitTools::equalTo(readUrl("classpath://scaffolder/response/delete_200_apikit-delete_application_json.json", "application/json"))]' message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+    <munit:test name="get:\apikit-login:munit-for-apikit-flow-part1-mule4-config-200-application\json-FlowTest" description="Verifying functionality of [get:\apikit-login:munit-for-apikit-flow-part1-mule4-config-200-application\json]">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="munit-for-apikit-flow-part1-mule4-main" />
+            <munit:enable-flow-source value="get:\apikit-login:munit-for-apikit-flow-part1-mule4-config" />
+        </munit:enable-flow-sources>
+        <munit:execution>
+            <http:request config-ref="HTTP_Request_Configuration" method="GET" path="/apikit-login" doc:name="apikit-login">
+                <http:headers><![CDATA[#[{"Accept":"application/json"}]]]></http:headers>
+                <http:query-params><![CDATA[#[{"name":""}]]]></http:query-params>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(200)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 200" />
+            <munit-tools:assert-that expression="#[%dw 2.0 output application/json ---payload]" is='#[MunitTools::equalTo(readUrl("classpath://scaffolder/response/get_200_apikit-login_application_json.json", "application/json"))]' message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+    <munit:test name="post:\apikit-post:munit-for-apikit-flow-part1-mule4-config-201-application\json-FlowTest" description="Verifying functionality of [post:\apikit-post:munit-for-apikit-flow-part1-mule4-config-201-application\json]">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="munit-for-apikit-flow-part1-mule4-main" />
+            <munit:enable-flow-source value="post:\apikit-post:munit-for-apikit-flow-part1-mule4-config" />
+        </munit:enable-flow-sources>
+        <munit:behavior>
+            <set-payload value="#[MunitTools::getResourceAsString('scaffolder/request/post_apikit-post_application_json.json')]" />
+        </munit:behavior>
+        <munit:execution>
+            <http:request config-ref="HTTP_Request_Configuration" method="POST" path="/apikit-post" doc:name="apikit-post">
+                <http:headers><![CDATA[#[{"Accept":"application/json","Content-Type":"application/json"}]]]></http:headers>
+            </http:request>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that expression="#[attributes.statusCode]" is="#[MunitTools::equalTo(201)]" message="The HTTP Status code is not correct!" doc:name="Assert That Status Code is 201" />
+            <munit-tools:assert-that expression="#[%dw 2.0 output application/json ---payload]" is='#[MunitTools::equalTo(readUrl("classpath://scaffolder/response/post_201_apikit-post_application_json.json", "application/json"))]' message="The response payload is not correct!" doc:name="Assert That - Payload is Expected" />
+        </munit:validation>
+    </munit:test>
+</mule>
